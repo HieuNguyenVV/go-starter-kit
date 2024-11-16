@@ -1,0 +1,27 @@
+gim:
+  env: dev
+  debug: true
+server:
+  ip: 127.0.0.1
+  name: starter_kit
+  port: 8080
+  host: localhost
+connection:
+  http:
+    timeout: 60
+  postgresql:
+    master:
+      db: starter_kit
+      host: localhost:5433
+      user: admin
+      password: admin
+      maxopen: 100
+      maxidle: 10
+    slave:
+      db: starter_kit
+      host: localhost:5433
+      user: admin
+      password: admin
+      maxopen: 100
+      maxidle: 10
+    fixedReadInstance: "slave"
