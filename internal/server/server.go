@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"go-starter-kit/internal/log"
 	"go-starter-kit/internal/pkg/database"
 	"go-starter-kit/internal/server/config"
 	"go-starter-kit/internal/server/middleware"
-	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 	"net/http"
 	"os"
@@ -17,14 +17,14 @@ import (
 )
 
 type Server struct {
-	logger     *zap.Logger
+	logger     log.Logger
 	config     *config.Config
 	httpServer *gin.Engine
 	postgres   *database.Postgres
 }
 
 func NewServer(config *config.Config,
-	logger *zap.Logger,
+	logger log.Logger,
 	httpServer *gin.Engine,
 	postgres *database.Postgres) *Server {
 
@@ -33,7 +33,7 @@ func NewServer(config *config.Config,
 			c.Status(http.StatusOK)
 		})
 
-		httpServer.GET("readyz", func(c *gin.Context) {
+		httpServer.GET("/readyz", func(c *gin.Context) {
 			ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
 			defer cancel()
 
@@ -64,7 +64,7 @@ func (s *Server) Run() {
 		Handler:           s.httpServer,
 	}
 	go func() {
-		s.logger.Info(fmt.Sprintf("Server is running on port: %v", s.config.Server.Port))
+		s.logger.Infof("Server is running on port: %v", s.config.Server.Port)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			s.logger.Error("server is running error")
 		}
@@ -84,7 +84,7 @@ func (s *Server) Run() {
 }
 
 func NewHTTPServer(
-	logger *zap.Logger,
+	logger log.Logger,
 	cfg *config.Config) *gin.Engine {
 	var engine *gin.Engine
 	if cfg.Gim.Debug {

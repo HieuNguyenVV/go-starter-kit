@@ -8,6 +8,12 @@ import (
 )
 
 type Config struct {
+	Log struct {
+		Level  string
+		Format string
+		Output string
+		Core   string
+	}
 	Gim struct {
 		Env   string
 		Debug bool

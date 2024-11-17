@@ -8,8 +8,8 @@ import (
 	"github.com/jackc/pgx"
 	"github.com/jackc/pgx/stdlib"
 	"github.com/jmoiron/sqlx"
+	"go-starter-kit/internal/log"
 	"go-starter-kit/internal/server/config"
-	"go.uber.org/zap"
 	"net/url"
 )
 
@@ -53,7 +53,7 @@ type connectionInfo struct {
 	MaxIdle  int
 }
 
-func NewPostgres(conf *config.Config, logger *zap.Logger) (*Postgres, error) {
+func NewPostgres(conf *config.Config, logger log.Logger) (*Postgres, error) {
 	masterInfo := connectionInfo{
 		Database: conf.Connection.Postgresql.Master.DB,
 		Host:     conf.Connection.Postgresql.Master.Host,

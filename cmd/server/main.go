@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	"go-starter-kit/internal/log"
 	"go-starter-kit/internal/pkg/database"
 	"go-starter-kit/internal/server"
 	"go-starter-kit/internal/server/config"
-	"go.uber.org/zap"
 )
 
 func main() {
@@ -13,19 +13,14 @@ func main() {
 	if err != nil {
 		panic("init config failed: " + err.Error())
 	}
-	fmt.Println(conf)
-	confLogger := zap.NewProductionConfig()
-	confLogger.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
-
-	logger, err := confLogger.Build()
+	logger, err := log.NewLogger(conf)
 	if err != nil {
 		panic("init logger failed: " + err.Error())
 	}
-	defer logger.Sync()
 
 	postgres, err := database.NewPostgres(conf, logger)
 	if err != nil {
-		logger.Fatal(fmt.Sprintf("database:NewPostgres: init failed: %s", err))
+		logger.Fatal("database:NewPostgres: init failed: %s", err)
 	}
 
 	httpClient := server.NewHTTPServer(logger, conf)
