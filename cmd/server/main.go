@@ -17,7 +17,6 @@ func main() {
 	if err != nil {
 		panic("init logger failed: " + err.Error())
 	}
-
 	logger.Infof("Git test")
 	postgres, err := database.NewPostgres(conf, logger)
 	if err != nil {
