@@ -47,6 +47,7 @@ func NewServer(config *config.Config,
 			c.Status(http.StatusOK)
 		})
 	}
+
 	return &Server{
 		logger:     logger,
 		config:     config,

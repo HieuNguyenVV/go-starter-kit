@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/jackc/pgx"
-	"github.com/jackc/pgx/stdlib"
+	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
 	"go-starter-kit/internal/log"
 	"go-starter-kit/internal/server/config"
@@ -101,12 +101,12 @@ func connectPostgres(inf connectionInfo) (*sqlx.DB, error) {
 	source := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", url.QueryEscape(inf.User),
 		url.QueryEscape(inf.Password), inf.Host, inf.Database)
 	fmt.Println(source)
-	conf, err := pgx.ParseConfig(source)
+	conf, err := pgxpool.ParseConfig(source)
 	if err != nil {
 		return nil, fmt.Errorf("pgx parse config failed: %w", err)
 	}
 
-	db := stdlib.OpenDB(*conf)
+	db := stdlib.OpenDB(*conf.ConnConfig)
 
 	DB := sqlx.NewDb(db, "pgx")
 	if err := DB.Ping(); err != nil {

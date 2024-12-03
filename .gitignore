@@ -1,2 +1,3 @@
 # Loại trừ thư mục dữ liệu PostgreSQL
 postgres_data/
+.idea
