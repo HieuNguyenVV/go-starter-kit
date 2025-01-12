@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -52,12 +54,24 @@ type Config struct {
 }
 
 func NewConfig() (*Config, error) {
+	return newConfig([]string{".", "configs"})
+}
+
+func newConfig(path []string) (*Config, error) {
 	_ = godotenv.Load()
 
+	for _, p := range path {
+		f := filepath.Join(p, ".env")
+		if _, err := os.Stat(f); err != nil {
+			_ = godotenv.Load(f)
+		}
+	}
 	v := viper.New()
 	v.SetConfigType("yaml")
 	v.SetConfigName("config")
-	v.AddConfigPath(".")
+	for _, p := range path {
+		v.AddConfigPath(p)
+	}
 	v.AutomaticEnv()
 	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
@@ -72,4 +86,8 @@ func NewConfig() (*Config, error) {
 	}
 
 	return &conf, nil
+}
+
+func NewExampleConfig(configPath []string) (*Config, error) {
+	return newConfig(append(configPath, ".", "configs"))
 }

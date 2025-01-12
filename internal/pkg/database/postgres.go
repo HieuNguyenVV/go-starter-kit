@@ -196,3 +196,7 @@ func (p *Postgres) EndCtx(ctx context.Context, err error) error {
 	}
 	return errors.New("TransactionCtx Not found")
 }
+
+func (p *Postgres) GetMasterDB() *sqlx.DB {
+	return p.writeDB
+}

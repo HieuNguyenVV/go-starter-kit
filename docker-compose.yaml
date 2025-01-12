@@ -1,20 +1,30 @@
-version: '3.9'
+version: "3.8"
 
 services:
-  database:
-    image: postgres:16.3
-    container_name: starter_kit
+  app:
+    build: .
+    container_name: go-starter-kit
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    restart: always
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres-dev
     ports:
       - "5433:5432"
-
     restart: always
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: starter_kit
-      TZ: UTC
+      - POSTGRES_DB= starter-kit
+      - POSTGRES_USER= root
+      - POSTGRES_PASSWORD= 123
+      - TZ= UTC
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - my
 volumes:
   postgres_data:
 

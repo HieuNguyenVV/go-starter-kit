@@ -31,6 +31,7 @@ func NewServer(config *config.Config,
 	{
 		httpServer.GET("/healthz", func(c *gin.Context) {
 			logger.Infof("Hello my friend....")
+			logger.Infof("Hello")
 			c.Status(http.StatusOK)
 		})
 
